@@ -1,17 +1,46 @@
 package com.carlos888nasa;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import com.carlos888nasa.controller.TaskController;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        TaskController taskController = new TaskController();
+        Scanner scanner = new Scanner(System.in);
+        String command;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        System.out.println("Welcome to the Task Manager!");
+        System.out.println("Available commands: add, execute, list, exit");
+
+        while (true) {
+            System.out.print("> ");
+            command = scanner.nextLine().trim().toLowerCase();
+
+            switch (command) {
+                case "add":
+                    System.out.print("Enter task description: ");
+                    String description = scanner.nextLine();
+                    System.out.print("Enter task priority (LOW, MEDIUM, HIGH): ");
+                    String priority = scanner.nextLine();
+                    System.out.print("Enter task duration (in minutes): ");
+                    int duration = Integer.parseInt(scanner.nextLine());
+                    taskController.addTask(description, priority, duration);
+                    break;
+                case "execute":
+                    taskController.executeNext();
+                    break;
+                case "list":
+                    taskController.getAllTasks().forEach(task ->
+                        System.out.println(task.getPriority() + " - " + task.getName() + " - " + task.getStatus())
+                    );
+                    break;
+                case "exit":
+                    System.out.println("Exiting Task Manager. Goodbye!");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Unknown command. Please try again.");
+            }
         }
     }
 }

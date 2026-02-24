@@ -9,7 +9,7 @@ public class Task {
     private TaskStatus status;
     private int estimatedTime; // in minutes or seconds
 
-    public Task(String name, Priority priority, TaskStatus status, int estimatedTime) {
+    public Task(String name, Priority priority, int estimatedTime) {
 
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Task name cannot be null or empty");
