@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class Task {
 
-    private String id;
+    private final String id;
     private String name;
     private Priority priority;
     private TaskStatus status;
@@ -24,7 +24,7 @@ public class Task {
         this.id = UUID.randomUUID().toString(); // Generate a unique ID for each task
         this.name = name;
         this.priority = priority;
-        this.status = status;
+        this.status = TaskStatus.PENDING; // Default status when a task is created
         this.estimatedTime = estimatedTime;
 
     }

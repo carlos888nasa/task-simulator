@@ -1,6 +1,5 @@
 package com.carlos888nasa.controller;
 
-import com.carlos888nasa.exceptions.TaskValidationException;
 import com.carlos888nasa.service.TaskManager;
 import com.carlos888nasa.service.TaskManagerImpl;
 import com.carlos888nasa.model.Task;
