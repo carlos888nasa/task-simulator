@@ -1,6 +1,8 @@
 package com.carlos888nasa.ui;
 
 import com.carlos888nasa.controller.TaskController;
+import com.carlos888nasa.exceptions.TaskValidationException;
+
 import java.util.Scanner;
 
 public class ConsoleUI {
@@ -25,13 +27,7 @@ public class ConsoleUI {
 
             switch (command) {
                 case "add":
-                    System.out.print("Enter task description: ");
-                    String description = scanner.nextLine();
-                    System.out.print("Enter task priority (LOW, MEDIUM, HIGH): ");
-                    String priority = scanner.nextLine();
-                    System.out.print("Enter task duration (in minutes): ");
-                    int duration = Integer.parseInt(scanner.nextLine());
-                    taskController.addTask(description, priority, duration);
+                    handleAddCommand();
                     break;
                 case "execute":
                     taskController.executeNext();
@@ -50,4 +46,30 @@ public class ConsoleUI {
             }
         }
     }
+
+    private void handleAddCommand() {
+
+        try{
+            System.out.print("Enter task description: ");
+            String description = scanner.nextLine().trim();
+
+            System.out.print("Enter task priority (LOW, MEDIUM, HIGH): ");
+            String priority = scanner.nextLine().trim();
+
+            System.out.print("Enter estimated time (in minutes): ");
+            int duration = Integer.parseInt(scanner.nextLine().trim());
+
+            taskController.addTask(description, priority, duration);
+
+        }catch(NumberFormatException e){
+        System.out.println("[UI ERROR] Duration must be a number.");
+        }catch (TaskValidationException e){
+            System.out.println("[LOGIC ERROR] " + e.getMessage());
+        }catch (IllegalArgumentException e){
+            System.out.println("[UI ERROR] Invalid priority. Please enter LOW, MEDIUM, or HIGH.");
+        }catch (Exception e){
+            System.out.println("[UI ERROR] An unexpected error occurred. Please try again.");
+        }
+    }
+
 }

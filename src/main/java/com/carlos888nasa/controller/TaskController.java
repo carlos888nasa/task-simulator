@@ -1,5 +1,6 @@
 package com.carlos888nasa.controller;
 
+import com.carlos888nasa.exceptions.TaskValidationException;
 import com.carlos888nasa.service.TaskManager;
 import com.carlos888nasa.service.TaskManagerImpl;
 import com.carlos888nasa.model.Task;
@@ -15,16 +16,10 @@ public class TaskController {
     }
 
     public void addTask(String description, String priority, int duration) {
-        
-        try{
 
-            Priority p = Priority.valueOf(priority.toUpperCase());
-            Task task = new Task(description, p, duration);
-            taskManager.addTask(task);
-
-        }catch(IllegalArgumentException e){
-            System.out.println("[CONTROLLER] Invalid priority: " + priority + ". Task not added.");
-        }
+        Priority p = Priority.valueOf(priority.toUpperCase());
+        Task task = new Task(description, p, duration);
+        taskManager.addTask(task);
 
     }
 

@@ -1,4 +1,6 @@
 package com.carlos888nasa.model;
+import com.carlos888nasa.exceptions.TaskValidationException;
+
 import java.util.UUID;
 
 public class Task {
@@ -12,11 +14,11 @@ public class Task {
     public Task(String name, Priority priority, int estimatedTime) {
 
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Task name cannot be null or empty");
+            throw new TaskValidationException("Task name cannot be null or empty");
         }
 
         if (estimatedTime < 0) {
-            throw new IllegalArgumentException("Estimated time cannot be negative");
+            throw new TaskValidationException("Estimated time cannot be negative");
         }
 
         this.id = UUID.randomUUID().toString(); // Generate a unique ID for each task
