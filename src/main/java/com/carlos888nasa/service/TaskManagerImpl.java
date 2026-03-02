@@ -50,10 +50,10 @@ public class TaskManagerImpl  implements TaskManager{
     }
 
     @Override
-    public void updateTask(String task) {
+    public void updateTask(String task, TaskStatus status) {
         for(Task t : allTasks){
             if(t.getId().equals(task)){
-                t.setStatus(TaskStatus.COMPLETED);
+                t.setStatus(status);
                 System.out.println("[SERVICE] Task updated: " + t.getName() + " is now COMPLETED.");
                 taskRepository.saveAll(allTasks);
                 return;

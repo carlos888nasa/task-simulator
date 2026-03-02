@@ -1,5 +1,6 @@
 package com.carlos888nasa.controller;
 
+import com.carlos888nasa.model.TaskStatus;
 import com.carlos888nasa.repository.JsonTaskRepository;
 import com.carlos888nasa.service.TaskManager;
 import com.carlos888nasa.service.TaskManagerImpl;
@@ -34,4 +35,17 @@ public class TaskController {
          return taskManager.getAllTasks();
      }
 
+     public void updateTask(String taskId, String status) {
+         taskManager.updateTask(taskId, TaskStatus.valueOf(status.toUpperCase()));
+
+     }
+
+     public Task getTaskById(String taskId) {
+         for (Task task : taskManager.getAllTasks()) {
+             if (task.getId().equals(taskId)) {
+                 return task;
+             }
+         }
+         return null; // or throw an exception if not found
+     }
 }
