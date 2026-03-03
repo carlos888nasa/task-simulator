@@ -11,4 +11,5 @@ public interface TaskManager {
     void updateTask(String task, TaskStatus status);
     List<Task> getAllTasks();
     void  applyAging();
+    void cleanOldTasks();
 }

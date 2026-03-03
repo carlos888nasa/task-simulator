@@ -22,6 +22,7 @@ public class TaskManagerImpl  implements TaskManager{
         this.taskRepository = taskRepository;
         List<Task> loadedTasks = taskRepository.loadTasks();
         allTasks.addAll(loadedTasks);
+        cleanOldTasks();
         for(Task task : loadedTasks){
             if(task.getStatus() == TaskStatus.PENDING){
                 executionQueue.offer(task);
@@ -59,6 +60,7 @@ public class TaskManagerImpl  implements TaskManager{
             if(t.getId().equals(task)){
                 t.setStatus(status);
                 if(status == TaskStatus.COMPLETED || status == TaskStatus.CANCELLED){
+                    t.setResolvedAt(LocalDateTime.now());
                     executionQueue.remove(t);
                 }
 
@@ -105,6 +107,22 @@ public class TaskManagerImpl  implements TaskManager{
         }
 
         if(updated){
+            taskRepository.saveAll(allTasks);
+        }
+
+    }
+
+    @Override
+    public void cleanOldTasks() {
+        boolean removed = allTasks.removeIf(task -> {
+            if ((task.getStatus() == TaskStatus.COMPLETED || task.getStatus() == TaskStatus.CANCELLED) && task.getResolvedAt() != null) {
+                Duration time = Duration.between(task.getResolvedAt(), LocalDateTime.now());
+                return time.toDays() >= 30;
+            }
+            return false;
+        });
+
+        if(removed){
             taskRepository.saveAll(allTasks);
         }
 

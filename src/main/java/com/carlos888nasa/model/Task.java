@@ -12,6 +12,7 @@ public class Task {
     private TaskStatus status;
     private int estimatedTime; // in minutes or seconds
     private final LocalDateTime createdAt; // Timestamp for when the task was created
+    private LocalDateTime resolvedAt; // Timestamp for when the task was resolved (completed or cancelled)
 
     public Task() {
         this.id = UUID.randomUUID().toString(); // Generate a unique ID for each task
@@ -61,6 +62,10 @@ public class Task {
         return createdAt;
     }
 
+    public LocalDateTime getResolvedAt() {
+        return resolvedAt;
+    }
+
     public void setName(String name){
         this.name = name;
     }
@@ -75,6 +80,10 @@ public class Task {
 
     public void setEstimatedTime(int estimatedTime){
         this.estimatedTime = estimatedTime;
+    }
+
+    public void setResolvedAt(LocalDateTime resolvedAt){
+        this.resolvedAt = resolvedAt;
     }
 
 }
