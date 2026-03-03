@@ -1,31 +1,44 @@
 # 🧩 Task Simulator & Scheduler
 
-This project is a task management simulator (mini-scheduler) written in Java.
-Its primary goal is to apply advanced Object-Oriented Programming (OOP) concepts, clean design, and layered architecture, focusing entirely on core logic rather than GUI distractions.
+This project is a high-performance task management simulator (mini-scheduler) written in Java.
+It moves beyond a simple CRUD, focusing on **Operating System scheduling concepts**, advanced data structures, and a robust layered architecture.
 
-## 🏗️ Project Architecture
+## 🏗️ Project Architecture & Design Patterns
 
-The system is designed with a strict separation of concerns (Layered Architecture):
+The system follows a strict **Layered Architecture** to ensure maintainability and separation of concerns:
 
-* **Model**: Pure representation of data and state (Tasks, Status, Priorities).
-* **Service**: The core engine. Contains business rules, validation, and scheduling logic.
-* **Controller**: The intermediary that orchestrates communication between the UI and the underlying logic.
-* **UI**: Console-based user interface.
-* **Exceptions**: Custom domain-specific error handling.
+* **Model**: Domain entities (`Task`, `Priority`, `TaskStatus`).
+* **Repository**: Persistence layer handling **JSON Serialization/Deserialization** via Jackson.
+* **Service**: The core engine. Implements **Lazy Evaluation** for task updates and aging.
+* **Controller**: Intermediary bridge between UI and business logic.
+* **UI**: Console-based interface with **Input Sanitization** (ID parsing and bracket cleaning).
 
-## ⚙️ Technologies Used
+## ⚙️ Advanced Logic & Algorithms
 
-* **Language:** Java
-* **Build System:** Maven
-* **Version Control:** Git / GitHub
+This simulator implements several advanced features inspired by OS process management:
 
-## 🧠 Core Concepts Applied
+* **Dynamic Priority Scheduling**: Leverages a `PriorityQueue` with custom `Comparators` to ensure the most critical missions are handled first.
+* **Aging Algorithm (Anti-Starvation)**: Prevents `LOW` priority tasks from being ignored indefinitely by automatically promoting them to higher priorities based on wait-time thresholds.
+* **Composite Sorting**: Listing logic uses multi-criteria sorting (`Priority` + `CreatedAt`) for a fair and professional display.
+* **Soft Delete & Data Retention**: Completed or cancelled tasks are visually hidden from the CLI to keep it clean, but are preserved in the JSON records for auditing.
 
-* Encapsulation and Domain Defense.
-* Polymorphism and Interfaces.
-* Java Collections Framework (`ArrayList`, `PriorityQueue`).
-* Clean Exception Handling.
+
+
+## 🧠 Core Technologies & Concepts
+
+* **Language**: Java 17+
+* **Build System**: Maven
+* **Data Structures**: `PriorityQueue`, `ArrayList`, `EnumMap`.
+* **Time Management**: `java.time` (Duration, LocalDateTime) for precise scheduling.
+* **Persistence**: JSON-based storage for state recovery between sessions.
 
 ## 🚀 How to Run
 
-*(Execution instructions will be added once the Main flow is completed)*
+1.  Ensure you have **Maven** and **JDK 17+** installed.
+2.  Clone the repository.
+3.  Run `mvn clean install`.
+4.  Execute the `Main` class.
+5.  Use commands: `add`, `execute`, `list`, `update`, `help`, `exit`.
+
+---
+*Developed with a focus on core logic, clean code, and "low-level" efficiency.*
