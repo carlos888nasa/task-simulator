@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface TaskManager {
     void addTask(Task task);
-    Task executeNextTask();
+    void executeNextTask();
     void updateTask(String task, TaskStatus status);
     List<Task> getAllTasks();
+    void  applyAging();
 }

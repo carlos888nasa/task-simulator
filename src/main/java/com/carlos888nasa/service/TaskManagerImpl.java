@@ -1,9 +1,12 @@
 package com.carlos888nasa.service;
 
+import com.carlos888nasa.model.Priority;
 import com.carlos888nasa.model.Task;
 import com.carlos888nasa.model.TaskStatus;
 import com.carlos888nasa.repository.TaskRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -35,26 +38,31 @@ public class TaskManagerImpl  implements TaskManager{
     }
 
     @Override
-    public Task executeNextTask() {
+    public void executeNextTask() {
 
+        applyAging();
         Task task = executionQueue.poll();
         if (task != null) {
             task.setStatus(TaskStatus.IN_PROGRESS);
             System.out.println("[SERVICE] Executing task: " + task.getName() + " with priority: " + task.getPriority());
             taskRepository.saveAll(allTasks);
-            return task;
+            return;
         }
 
         System.out.println("[SERVICE] No tasks to execute.");
-        return null;
     }
 
     @Override
     public void updateTask(String task, TaskStatus status) {
+        applyAging();
         for(Task t : allTasks){
             if(t.getId().equals(task)){
                 t.setStatus(status);
-                System.out.println("[SERVICE] Task updated: " + t.getName() + " is now COMPLETED.");
+                if(status == TaskStatus.COMPLETED || status == TaskStatus.CANCELLED){
+                    executionQueue.remove(t);
+                }
+
+                System.out.println("[SERVICE] Task updated: " + t.getName() + " is now " + t.getStatus());
                 taskRepository.saveAll(allTasks);
                 return;
             }
@@ -63,6 +71,42 @@ public class TaskManagerImpl  implements TaskManager{
 
     @Override
     public List<Task> getAllTasks() {
-        return new ArrayList<>(allTasks);
+        applyAging();
+        List<Task> sortedTasks = new ArrayList<>(allTasks);
+        sortedTasks.sort(Comparator.comparing(Task::getPriority).reversed().thenComparing(Task::getCreatedAt));
+        return sortedTasks;
+    }
+
+    @Override
+    public void applyAging() {
+
+        boolean updated = false;
+
+        for (Task task : allTasks) {
+            Duration time = Duration.between(task.getCreatedAt(), LocalDateTime.now());
+
+            if (task.getStatus() == TaskStatus.PENDING) {
+                if(time.toMinutes() >= 180 && task.getPriority() == Priority.LOW){
+
+                    task.setPriority(Priority.MEDIUM);
+                    executionQueue.remove(task);
+                    executionQueue.offer(task);
+                    updated = true;
+
+                } else if(time.toMinutes() >= 360 && task.getPriority() == Priority.MEDIUM){
+
+                    task.setPriority(Priority.HIGH);
+                    executionQueue.remove(task);
+                    executionQueue.offer(task);
+                    updated = true;
+
+                }
+            }
+        }
+
+        if(updated){
+            taskRepository.saveAll(allTasks);
+        }
+
     }
 }
